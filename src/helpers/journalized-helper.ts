@@ -80,23 +80,16 @@ export class JournalizationFilter {
 
     protected _processField(source: any, field: string): any {
         let result = source[field];
-        console.log('_processField field', field);
-        console.log('_processField field', field, 'result #1', result);
         if (this._processors[field]) {
             result = this._processors[field](result);
-            console.log('_processField field', field, ' result #2', result);
         } else if (this._defaultProcessor) {
             result = this._defaultProcessor(result);
-            console.log('_processField field', field, 'result #3', result);
         }
         if (this._filters[field]) {
             result = this._filters[field]
                 .from(result)
                 .filter();
-            console.log('_processField field', field, 'result #4', result);
-
         }
-        console.log('_processField field', field, 'final result', result);
         return result;
     }
 
@@ -106,7 +99,6 @@ export class JournalizationFilter {
 
     protected _filter(source: any, ...filtred: string[]): any {
         this.keep(...filtred);
-        console.log('JournalizationFilter source', source);
         const result: any = {};
         Object.keys(source)
             .filter(k => this._filterField(source, k))
@@ -116,7 +108,6 @@ export class JournalizationFilter {
     }
 
     keep(...filtred: string[]): JournalizationFilter {
-
         filtred.forEach(f => this._kept.add(f));
         return this;
     }
@@ -126,7 +117,6 @@ export class JournalizationFilter {
             this._flatten(this._source.map((o: any) => this._filter(o, ...filtred))) :
             this._filter(this._source, ...filtred);
     }
-
 }
 
 export class JournalizationTrueFilter extends JournalizationFilter {
@@ -139,5 +129,4 @@ export class JournalizationTrueFilter extends JournalizationFilter {
     protected _filterField(source: any, field: string): boolean {
         return !!source?.[field] && super._filterField(source, field);
     }
-
 }
